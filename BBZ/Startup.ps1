@@ -1,18 +1,38 @@
-Write-Host  -ForegroundColor Yellow "Starting Brooks' Custom OSDCloud ..."
-cls
+$input = Read-Host "Please enter Hostname"
 
-Set-ExecutionPolicy RemoteSigned -Force
-Install-Module AutopilotOOBE -Force
-Import-Module AutopilotOOBE -Force
-
-
+#=======================================================================
+#   OS: Params and Start-OSDCloud
+#=======================================================================
 $Params = @{
-    Title = 'OSDeploy Autopilot Registration'
-    AssignedComputerName = 'BBZ-'
-    Hidden = 'AddToGroup','AssignedUser','GroupTag'
+    OSVersion = "Windows 11"
+    OSBuild = "22H2"
+    OSEdition = "Education"
+    OSLanguage = "en-us","de-de","fr-fr"
+    OSLicense = "Retail"
+    SkipAutopilot = $true
+    SkipODT = $true
 }
-AutopilotOOBE @Params
+Start-OSDCloud @Params
 
-Start-AutopilotOOBE
-
-Start-OSDCloudGUI
+#=======================================================================
+#   PostOS: AutopilotOOBE Staging
+#=======================================================================
+$AutopilotOOBEJson = @'
+{
+    "Assign":  {
+                   "IsPresent":  true
+               },
+    "AssignedComputerName": $input,
+    "Hidden":  [
+                   "AddToGroup",
+                   "AssignedUser",
+                   "GroupTag",
+                   "PostAction"
+               ],
+    "PostAction":  "Quit",
+    "Run":  "NetworkingWireless",
+    "Docs":  "https://autopilotoobe.osdeploy.com/",
+    "Title":  "OSDeploy Autopilot Registration"
+}
+'@
+$AutopilotOOBEJson | Out-File -FilePath "C:\ProgramData\OSDeploy\OSDeploy.AutopilotOOBE.
