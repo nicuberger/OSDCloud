@@ -1,6 +1,10 @@
 Write-Host  -ForegroundColor Yellow "Starting Brooks' Custom OSDCloud ..."
 cls
 
-netsh wlan connect ssid="POCO F3" key="Start123$"
+Set-ExecutionPolicy RemoteSigned -Force
+Install-Module AutopilotOOBE -Force
+Import-Module AutopilotOOBE -Force
+
+Start-AutopilotOOBE
 
 Start-OSDCloudGUI
